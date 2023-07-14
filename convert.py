@@ -36,11 +36,20 @@ for item in items:
     filename = "".join(x for x in title if x.isalnum() or x.isspace()).rstrip()
     filename = f"{filename}.md"
 
+    # Получение меток из записи
+    categories = item.get('category', [])
+    if not isinstance(categories, list):
+        categories = [categories]
+
+    # Форматирование меток в Markdown
+    categories_formatted = "\n".join(f"- {category}" for category in categories)
+    categories_formatted = f"**Метки:**\n{categories_formatted}\n\n"
+
     # Форматирование даты публикации в Markdown
-    pub_date_formatted = f"**Дата публикации:** {pub_date}\n\n"
+    pub_date_formatted = f"{pub_date}\n\n"
 
     # Преобразование содержимого в Markdown
-    markdown_content = f"# {title}\n\n{pub_date_formatted}{description}\n\n"
+    markdown_content = f"# {title}\n\n{pub_date_formatted}{categories_formatted}{description}\n\n"
 
     # Сохранение Markdown-файла
     markdown_output = os.path.join(output_folder, filename)
