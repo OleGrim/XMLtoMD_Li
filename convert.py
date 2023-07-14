@@ -4,7 +4,7 @@ import markdown
 import html2text
 
 # Укажите путь к XML-файлу
-xml_file = 'c:\Home\Python\XMLtoMD\spring_2010.xml'
+xml_file = 'c:\Home\Python\XMLtoMD\spring_2016.xml'
 
 # Укажите папку для сохранения Markdown-файлов
 output_folder = 'c:\Home\Python\XMLtoMD'
@@ -25,6 +25,7 @@ for item in items:
     title = item['title']
     link = item['link']
     description_html = item['description']
+    pub_date = item['pubDate']
 
     # Преобразование HTML в Markdown
     h = html2text.HTML2Text()
@@ -35,8 +36,11 @@ for item in items:
     filename = "".join(x for x in title if x.isalnum() or x.isspace()).rstrip()
     filename = f"{filename}.md"
 
+    # Форматирование даты публикации в Markdown
+    pub_date_formatted = f"**Дата публикации:** {pub_date}\n\n"
+
     # Преобразование содержимого в Markdown
-    markdown_content = f"# {title}\n\n{description}\n\n"
+    markdown_content = f"# {title}\n\n{pub_date_formatted}{description}\n\n"
 
     # Сохранение Markdown-файла
     markdown_output = os.path.join(output_folder, filename)
