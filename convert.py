@@ -1,6 +1,7 @@
 import os
 import xmltodict
 import markdown
+import html2text
 
 # Укажите путь к XML-файлу
 xml_file = 'c:\Home\Python\XMLtoMD\spring_2010.xml'
@@ -23,7 +24,12 @@ if not isinstance(items, list):
 for item in items:
     title = item['title']
     link = item['link']
-    description = item['description']
+    description_html = item['description']
+
+    # Преобразование HTML в Markdown
+    h = html2text.HTML2Text()
+    h.body_width = 0
+    description = h.handle(description_html)
 
     # Очистка заголовка для использования в имени файла
     filename = "".join(x for x in title if x.isalnum() or x.isspace()).rstrip()
