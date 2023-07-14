@@ -1,36 +1,40 @@
+import os
 import xmltodict
 import markdown
-import os
 
-def convert_xml_to_md(xml_file_path, output_folder):
-    with open(xml_file_path, 'r', encoding='windows-1251') as xml_file:
-        xml_data = xml_file.read()
-        data_dict = xmltodict.parse(xml_data)
+# Укажите путь к XML-файлу
+xml_file = 'c:\Home\Python\XMLtoMD\spring_2010.xml'
 
-        items = data_dict['item']  # Получение всех элементов <item>
+# Укажите папку для сохранения Markdown-файлов
+output_folder = 'c:\Home\Python\XMLtoMD'
 
-        if isinstance(items, list):  # Если есть несколько элементов <item>
-            for item in items:
-                convert_item_to_md(item, output_folder)
-        elif isinstance(items, dict):  # Если только один элемент <item>
-            convert_item_to_md(items, output_folder)
+# Создание папки для сохранения файлов, если она не существует
+os.makedirs(output_folder, exist_ok=True)
 
-    print('Преобразование завершено!')
+# Преобразование XML в словарь
+with open(xml_file, 'r', encoding='windows-1251') as file:
+    data = xmltodict.parse(file.read(), encoding='windows-1251')
 
-def convert_item_to_md(item, output_folder):
+# Проход по каждой записи и сохранение в отдельном Markdown-файле
+items = data['rss']['channel']['item']
+if not isinstance(items, list):
+    items = [items]
+
+for item in items:
     title = item['title']
-    content = item['description']
+    link = item['link']
+    description = item['description']
 
-    # Преобразование контента в Markdown
-    md_content = markdown.markdown(content)
+    # Очистка заголовка для использования в имени файла
+    filename = "".join(x for x in title if x.isalnum() or x.isspace()).rstrip()
+    filename = f"{filename}.md"
 
-    # Создание файла Markdown
-    md_file_path = os.path.join(output_folder, f'{title}.md')
-    with open(md_file_path, 'w', encoding='utf-8') as md_file:
-        md_file.write(md_content)
+    # Преобразование содержимого в Markdown
+    markdown_content = f"# {title}\n\n{description}\n\n"
 
-# Путь к файлу XML и папке для сохранения файлов Markdown
-xml_file_path = 'C:\Home\Python\XMLtoMD\spring_2010.xml'
-output_folder = 'C:\Home\Python\XMLtoMD'
+    # Сохранение Markdown-файла
+    markdown_output = os.path.join(output_folder, filename)
+    with open(markdown_output, 'w', encoding='utf-8') as file:
+        file.write(markdown_content)
 
-convert_xml_to_md(xml_file_path, output_folder)
+print("Преобразование XML в Markdown завершено.")
