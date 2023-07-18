@@ -1,4 +1,4 @@
-# Версия 7.
+# Версия 7.1
 # Ковертирование архивного файла LiveInternet (.xml) в формат markdown (.md).
 import os
 import xmltodict
@@ -9,7 +9,7 @@ import html2text
 xml_file = 'c:/XMLtoMD_Li/file.xml'
 
 # Укажите папку для сохранения Markdown-файлов
-output_folder = 'c:/Output'
+output_folder = 'c:/XMLtoMD_Li/Output'
 
 # Создание папки для сохранения файлов, если она не существует
 os.makedirs(output_folder, exist_ok=True)
